@@ -10,6 +10,7 @@ class Connect_Four {
         start()
         inputSize()
         start_Info()
+        printboard()
     }
     fun start() {
         println("Connect Four")
@@ -51,8 +52,33 @@ class Connect_Four {
         println(p1 + " vs " + p2)
         println("$H X " + W + " board")
     }
+
+    fun printboard(){
+        for(b in 1..W){
+            print(" $b")
+        }
+        println("")
+
+        for(a in 1..H){
+
+            for(b in 1..W){
+                print("║ ")
+            }
+
+            println("║")
+
+        }
+        print("╚")
+
+        for(b in 1..W-1){
+            print("═╩")
+        }
+        print("═╝")
+    }
 }
 
 fun main() {
+
+    // println('║')
     val game = Connect_Four()
 }
