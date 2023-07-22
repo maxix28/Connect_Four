@@ -3,30 +3,32 @@ enum class pplayer(var name1:String,val sign:Char){
     p1("p1",'o'),
     p2("p2",'*')
 }
-var board1 = mutableListOf(
-    mutableListOf<Char>('A','A','A','A','A','A','A','A','A',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-    mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
-)
 fun turn(n :Int):pplayer{
     if(n%2==0)return pplayer.p1
     else return pplayer.p2
 }
 class Connect_Four {
+    var board1 = mutableListOf(
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+        mutableListOf<Char>(' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',),
+    )
+
     var size = ""
     var W = 0
     var H = 0
     var board = mutableListOf(mutableListOf<Char>(' '),)
     var n1 = mutableListOf<Int>()
+    var n =0
     init{
         start()
         inputSize()
@@ -87,7 +89,6 @@ class Connect_Four {
         }
     }
     fun gameLogic(){
-        var n =0
         game@ while( true){
 
             println("${turn(n).name1}'s turn:")
@@ -110,9 +111,76 @@ class Connect_Four {
             board1[putLine.toInt()][n1[putLine.toInt()]]=turn(n).sign
             n1[putLine.toInt()]--
 
-            n++
+
             temporPrint()
+            if(winningConditions()){
+                break@game
+            }
+            n++
         }
+    }
+    fun winningConditions():Boolean{
+        var temm = false
+        for( i in 1..board1.size-1) {//in 1 line
+            for (a in 1..board1[0].size-3) {
+                if ((board1[i][a]== turn(n).sign)&&(board1[i][a+1]== turn(n).sign)){
+                    if ((board1[i][a+2]== turn(n).sign)&&(board1[i][a+3]== turn(n).sign)){
+                        temm=true
+                    }
+                }
+            }
+        }
+        for( i in 1..board1.size-3) {//in 1 colom
+            for (a in 1..board1[0].size-1) {
+                if ((board1[i][a]== turn(n).sign)&&(board1[i+1][a]== turn(n).sign)){
+                    if ((board1[i+2][a]== turn(n).sign)&&(board1[i+3][a]== turn(n).sign)){
+                        temm=true
+                    }
+                }
+            }
+        }
+        for( i in 0..board1.size-3) {//diadonale<- робоча
+            for (a in 0..board1[0].size-2) {
+                if ((board1[i][a]== turn(n).sign)&&(board1[i+1][a+1]== turn(n).sign)){
+                    if ((board1[i+2][a+2]== turn(n).sign)&&(board1[i+3][a+3]== turn(n).sign)){
+                        temm=true
+                    }
+                }
+            }
+        }
+        for( i in 1..board1.size-1) {//diadonale->
+            for (a in 2..board1[0].size-1) {
+                if ((board1[i][a]== turn(n).sign)&&(board1[i+1][a-1]== turn(n).sign)){
+                    if ((board1[i+2][a-2]== turn(n).sign)&&(board1[i+3][a-3]== turn(n).sign)){
+                        temm=true
+                    }
+                }
+            }
+        }
+        var mount= H*W
+        var NonEmpty=0
+
+        var draw= false
+
+
+        for( i in 0..board1.size-1) {//diadonale->
+            for (a in 0..board1[0].size-1) {
+                if (board1[i][a]!=' '){
+                    NonEmpty++
+                }
+            }
+        }
+        if(NonEmpty==mount)draw=true
+
+        if(draw){
+            println("It is a draw")
+            return true
+        }
+        if(temm){
+            println("Player ${turn(n).name1} won")
+            return true
+        }
+        else return false
     }
     fun temporPrint(){
         for(b in 1..W){
